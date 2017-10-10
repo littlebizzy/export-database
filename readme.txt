@@ -8,6 +8,7 @@ Requires PHP: 7.0
 Stable tag: 1.0.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Prefix: EXPDBS
 
 Quickly and easily export your WordPress database with a single click for the purposes of migration, testing, or backup (in either SQL or ZIP format).
 
@@ -21,24 +22,20 @@ In future versions we may add more options.
 
 #### Compatibility ####
 
-This plugin has been designed for use on LEMP (Nginx) web servers with PHP 7.0+ and MySQL 5.7+ to achieve best performance.
+This plugin has been designed for use on LEMP (Nginx) web servers with PHP 7.0 and MySQL 5.7 to achieve best performance. All of our plugins are meant for single site WordPress installations only; for performance and security reasons, we highly recommend against using WordPress Multisite for the vast majority of projects.
 
 #### Plugin Features ####
 
 * Settings Page: Yes
 * Upgrade Available: No
 * Includes Media: No
-* Includes CSS: No
+* Includes CSS: Yes
 * Database Storage: No
   * Transients: No
-    * Options: No
+    * Options: Yes
 * Must-Use Support: Yes
 * Multi-site Support: No
 * Uninstalls Data: N/A
-
-#### Localization ####
-
-* English (US)
 
 #### Code Inspiration ####
 
@@ -58,21 +55,21 @@ We invite you to check out a few other related free plugins that our team has al
 
 We thank the following groups for their generous contributions to the WordPress community which have particularly benefited us in developing our own free plugins and paid services:
 
-* [Automattic](https://automattic.com/)
-* [Delicious Brains](https://deliciousbrains.com/)
-* [Roots](https://roots.io/)
-* [rtCamp](https://rtcamp.com/)
-* [WP Tavern](https://wptavern.com/)
+* [Automattic](https://automattic.com)
+* [Delicious Brains](https://deliciousbrains.com)
+* [Roots](https://roots.io)
+* [rtCamp](https://rtcamp.com)
+* [WP Tavern](https://wptavern.com)
 
 #### Disclaimer ####
 
-*We released this plugin in response to our managed hosting clients asking for better access to their server environment, and our primary goal will remain supporting that purpose. Although we are 100% open to fielding requests from the WordPress community, we kindly ask that you consider the above mentioned goals before leaving reviews of this plugin, thanks!*
+We released this plugin in response to our managed hosting clients asking for better access to their server, and our primary goal will remain supporting that purpose. Although we are 100% open to fielding requests from the WordPress community, we kindly ask that you keep the above mentioned goals in mind, thanks!
 
 == Installation ==
 
-1. Upload to `/wp-content/plugins/`
+1. Upload to `/wp-content/plugins/export-database-littlebizzy`
 2. Activate via WP Admin > Plugins
-3. Navigate to WP Admin > Tools > Export DB
+3. Navigate to WP Admin > Tools > Export Database
 
 == FAQ ==
 
@@ -85,6 +82,9 @@ Currently no, there is no settings page and not meant to be at this time.
 Please avoid leaving negative reviews in order to get a feature implemented. Instead, we kindly ask that you post your feedback on the wordpress.org support forums by tagging this plugin in your post. If needed, you may also contact our homepage.
 
 == Changelog ==
+
+= 1.0.5 =
+* minor code tweaks
 
 = 1.0.4 =
 * updated recommended plugins
