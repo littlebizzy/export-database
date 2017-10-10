@@ -5,7 +5,7 @@ Tags: export, database, db, migrate, download, backup, back up, mysql, sql, zip,
 Requires at least: 4.4
 Tested up to: 4.8
 Requires PHP: 7.0
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Prefix: EXPDBS
