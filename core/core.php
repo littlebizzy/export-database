@@ -75,7 +75,7 @@ class EXPDBS_Core {
 	 * Set the admin menu
 	 */
 	public function admin_menu() {
-		$hook_suffix = add_management_page('Export DB', 'Export DB', 'export', 'export-db-lb', array(&$this, 'admin_page'));
+		$hook_suffix = add_management_page('Export Database', 'Export Database', 'export', 'export-database', array(&$this, 'admin_page'));
 		add_action('load-'. $hook_suffix, array( $this, 'admin_assets'));
 	}
 
