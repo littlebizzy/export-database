@@ -1,6 +1,7 @@
 === Export Database (Backup & Download) ===
 
 Contributors: littlebizzy
+Donate link: https://www.patreon.com/littlebizzy
 Tags: export, backup, migrate, database, db
 Requires at least: 4.4
 Tested up to: 4.9
