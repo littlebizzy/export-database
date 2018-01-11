@@ -1,4 +1,4 @@
-=== Export Database (Backup & Download) ===
+=== Export Database (Backup & Download Database) ===
 
 Contributors: littlebizzy
 Donate link: https://www.patreon.com/littlebizzy
