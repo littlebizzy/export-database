@@ -1,7 +1,7 @@
 <?php
 
 // Subpackage namespace
-namespace LittleBizzy\DisableEmojis;
+namespace LittleBizzy\ExportDatabase;
 
 /**
  * Admin Notices MultiSite class
