@@ -7,7 +7,7 @@ Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 7.0
 Multisite support: No
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Prefix: EXPDBS
@@ -165,13 +165,16 @@ Please avoid leaving negative reviews in order to get a feature implemented. Ins
 
 == Changelog ==
 
+= 1.0.9 =
+* updated plugin meta
+
 = 1.0.8 =
 * added warning for Multisite installations
 * updated recommended plugins
 
 = 1.0.7 =
 * tested with WP 4.9
-* added support for `define('DISABLE_NAG_NOTICES', true);`
+* added support for `DISABLE_NAG_NOTICES`
 
 = 1.0.6 =
 * optimized plugin code
@@ -179,7 +182,7 @@ Please avoid leaving negative reviews in order to get a feature implemented. Ins
 * added rating request notice
 
 = 1.0.5 =
-* minor code tweaks
+* optimized plugin code
 
 = 1.0.4 =
 * updated recommended plugins
@@ -195,3 +198,4 @@ Please avoid leaving negative reviews in order to get a feature implemented. Ins
 
 = 1.0.0 =
 * initial release
+* tested with PHP 7.0
