@@ -24,7 +24,7 @@ final class EXPDBS_Admin_Notices {
 	private $rate_us_url2 = 'https://www.facebook.com/groups/littlebizzy/';
 	private $rate_us_url3 = 'https://www.littlebizzy.com/services/speed-boost?utm_source=wpnotice';
 	private $rate_us_url4 = 'https://codex.wordpress.org/Plugin_API/Action_Reference/admin_notices#Disable_Nag_Notices';
-	private $rate_us_message = 'Howdy, friend :)<br><br>Thanks for using <strong>%plugin%</strong>. Please support our free work by rating this plugin with 5 stars on <a href="%url%" target="_blank">WordPress.org</a>.<br><br>You may also join our free <a href="%url2%" target="_blank">Facebook group</a> to post any questions or comments!<br><br>Cheers, Jesse<br><br>P.S. Use coupon code <code>SPEED20</code> to get $20 off our popular <a href="%url3%" target="_blank">Speed Boost</a> service at LittleBizzy.com.<br><br><small><em><a href="%url4%" target="_blank">Hide these notices</a></em></small>';
+	private $rate_us_message = 'Thanks for using <strong>%plugin%</strong>. Please support our free work by rating this plugin with 5 stars on <a href="%url%" target="_blank">WordPress.org</a>.<br><br>You may also join our free <a href="%url2%" target="_blank">Facebook group</a> to post any questions or comments!<br><br>Cheers, Jesse<br><br>P.S. Use coupon code <code>SPEED20</code> to get $20 off our popular <a href="%url3%" target="_blank">Speed Boost</a> service at LittleBizzy.com.<br><br><small><em><a href="%url4%" target="_blank">Hide these notices</a></em></small>';
 
 
 
@@ -34,6 +34,11 @@ final class EXPDBS_Admin_Notices {
 	private $days_dismissing_suggestions = 180; // 6 months reappear
 	private $suggestions_message = '%plugin% recommends the following free plugins:';
 	private $suggestions = array(
+		'speed-demon-littlebizzy' => array(
+			'name' => 'Speed Demon',
+			'desc' => 'A powerful bundle of lightweight tweaks that drastically improve the loading speed of WordPress by reducing bloat and improving overall efficiency.',
+			'filename' => 'speed-demon.php',
+		),
 		'index-autoload-littlebizzy' => array(
 			'name' => 'Index Autoload',
 			'desc' => 'Adds an index to the autoload in wp_options table and verifies it exists on a daily basis (using WP Cron), resulting in a more efficient database.',
@@ -43,11 +48,6 @@ final class EXPDBS_Admin_Notices {
 			'name' => 'Download Plugin',
 			'desc' => 'Quickly and easily download a ZIP file of any plugin currently installed on your WordPress website without requiring SFTP info or fancy dependencies.',
 			'filename' => 'download-plugin.php',
-		),
-		'download-theme-littlebizzy' => array(
-			'name' => 'Download Theme',
-			'desc' => 'Quickly and easily download a ZIP file of any theme currently installed on your WordPress website without requiring SFTP info or fancy dependencies.',
-			'filename' => 'download-theme.php',
 		),
 		'duplicate-post-littlebizzy' => array(
 			'name' => 'Duplicate Post',
