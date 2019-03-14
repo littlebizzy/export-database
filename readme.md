@@ -2,13 +2,17 @@
 
 Quickly and easily export your WordPress database with a single click for the purposes of migration, testing, or backup (in either SQL or ZIP format).
 
-* [Plugin Homepage (LittleBizzy.com)](https://www.littlebizzy.com/plugins/export-database)
-* [Free Facebook Group](https://www.facebook.com/groups/littlebizzy/)
+* [Plugin Homepage](https://www.littlebizzy.com/plugins/force-https)
+* [Download Latest Version (ZIP)](https://github.com/littlebizzy/export-database/archive/1.1.0.zip)
+* [**Become A LittleBizzy.com Member Today!**](https://www.littlebizzy.com/members)
 
 ### Defined Constants
 
     /* Plugin Meta */
-    define('DISABLE_NAG_NOTICES', true);
+    define('AUTOMATIC_UPDATE_PLUGINS', false); // default = false
+    define('DISABLE_NAG_NOTICES', true); // default = true
+    
+    /* Export Database Functions */
 
 ### Compatibility
 
