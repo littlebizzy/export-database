@@ -2,34 +2,53 @@
 
 Quickly and easily export your WordPress database with a single click for the purposes of migration, testing, or backup (in either SQL or ZIP format).
 
-* [Plugin Homepage](https://www.littlebizzy.com/plugins/force-https)
-* [Download Latest Version (ZIP)](https://github.com/littlebizzy/export-database/archive/1.1.0.zip)
-* [**Become A LittleBizzy.com Member Today!**](https://www.littlebizzy.com/members)
+## Changelog
 
-### Defined Constants
+### 1.2.0
+- updated core classes for PHP 7.0–8.3 compatibility
+- replaced deprecated PHP functions including `each()`
+- fixed undefined bit-field handling in SQL export logic
+- improved sanitization and nonce handling for admin actions
+- removed deprecated `&$this` usage for PHP 8 compatibility
+- ensured all AJAX actions load safely without inline JavaScript
+- maintained original UI but cleaned up `admin.php` callbacks
+- added safe use of `wp_json_encode()` for migration state storage
+- improved stability of file writes during export and compression phases
 
-    /* Plugin Meta */
-    define('AUTOMATIC_UPDATE_PLUGINS', false); // default = false
-    define('DISABLE_NAG_NOTICES', true); // default = true
-    
-    /* Export Database Functions */
+### 1.1.0
+- tested with WP 5.0
+- updated plugin meta
 
-### Compatibility
+### 1.0.9
+- updated plugin meta
 
-This plugin has been designed for use on [SlickStack](https://slickstack.io) web servers with PHP 7.2 and MySQL 5.7 to achieve best performance. All of our plugins are meant for single site WordPress installations only — for both performance and usability reasons, we strongly recommend avoiding WordPress Multisite for the vast majority of your projects.
+### 1.0.8
+- added warning for Multisite installations
+- updated recommended plugins
 
-Any of our WordPress plugins may also be loaded as "Must-Use" plugins (meaning that they load first, and cannot be deactivated) by using our free [Autoloader](https://github.com/littlebizzy/autoloader) script in the `mu-plugins` directory.
+### 1.0.7
+- tested with WP 4.9
+- added support for `DISABLE_NAG_NOTICES`
 
-### Our Philosophy
+### 1.0.6
+- optimized plugin code
+- updated recommended plugins
+- added rating request notice
 
-> "Decisions, not options." — WordPress.org
+### 1.0.5
+- optimized plugin code
 
-> "Everything should be made as simple as possible, but not simpler." — Albert Einstein, et al
+### 1.0.4
+- updated recommended plugins
 
-> "Write programs that do one thing and do it well... write programs to work together." — Doug McIlroy
+### 1.0.3
+- added recommended plugins notice
 
-> "The innovation that this industry talks about so much is bullshit. Anybody can innovate... 99% of it is 'get the work done.' The real work is in the details." — Linus Torvalds
+### 1.0.2
+- tested with WP 4.8
 
-### Support Issues
+### 1.0.1
+- updated plugin meta
 
-Please do not submit Pull Requests. Instead, kindly create a new Issue with relevant information if you are an experienced developer, otherwise you may become a [**LittleBizzy.com Member**](https://www.littlebizzy.com/members) if your company requires official support.
+### 1.0.0
+- initial release
