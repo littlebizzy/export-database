@@ -188,6 +188,7 @@ class EXPDBS_Core_AJAX {
 		}
 
 		// Download file
+		// core/export.php now handles is_readable() + safe_read() + safe_unlink()
 		EXPDBS_Core_Export::download( $_POST['key'] );
 	}
 
