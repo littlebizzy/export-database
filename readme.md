@@ -7,7 +7,6 @@ Quickly and easily export your WordPress database with a single click for the pu
 ### 1.3.0
 - fixed long-standing issue with BIT field export handling to prevent malformed SQL in certain table structures
 - cleaned up legacy AJAX routing logic and simplified initialization for improved stability
-- improved validation and safeguards on migration metadata to avoid corrupted export states
 - hardened cleanup routine to prevent warnings when removing expired migration files
 - added PHP 7.0–8.3 compatibility adjustments across core classes
 - removed redundant or outdated internal code and improved coding-standards compliance
@@ -20,7 +19,7 @@ Quickly and easily export your WordPress database with a single click for the pu
 - removed deprecated `&$this` usage for PHP 8 compatibility
 - maintained original UI but cleaned up `admin.php` callbacks
 - improved stability of file writes during export and compression phases
-- added safe use of `wp_json_encode()` for migration state storage
+- implemented safe use of `wp_json_encode()` for migration state storage
 - note: fix to undefined BIT field handling was NOT implemented in this version despite earlier notes
 
 ### 1.1.0
