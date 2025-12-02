@@ -3,7 +3,7 @@
 Plugin Name: Export Database
 Plugin URI: https://www.littlebizzy.com/plugins/export-database
 Description: Quickly and easily export your WordPress database with a single click for the purposes of migration, testing, or backup (in either SQL or ZIP format).
-Version: 1.2.1
+Version: 1.3.0
 Author: LittleBizzy
 Author URI: https://www.littlebizzy.com
 License: GPLv3
