@@ -55,9 +55,19 @@ class EXPDBS_Core_AJAX {
 	*/
 	private function __construct() {
 
-		// Run requested method
+		// Validate that action exists
+		if ( empty( $_POST['action'] ) || ! is_string( $_POST['action'] ) ) {
+			return; // let WP handle any invalid request
+		}
+
+		// Expected structure: expdbs_start, expdbs_export, expdbs_compress, expdbs_download
+		if ( 0 !== strpos( $_POST['action'], 'expdbs_' ) ) {
+			return;
+		}
+
 		$method = substr( $_POST['action'], 7 );
 
+		// Only register if the internal method exists
 		if ( method_exists( $this, $method ) ) {
 			add_action( 'wp_ajax_' . $_POST['action'], array( $this, $method ) );
 		}
@@ -75,7 +85,6 @@ class EXPDBS_Core_AJAX {
 	 */
 	public function start() {
 
-		// Load export library
 		$this->load_export();
 
 		// Check folder
@@ -86,13 +95,11 @@ class EXPDBS_Core_AJAX {
 		// Compression
 		$compress = ! empty( $_POST['compress'] );
 
-		// Start the migration
 		$key = EXPDBS_Core_Export::start( $compress );
 		if ( false === $key ) {
 			$this->error_ajax_response( 'Cannot write the file.' );
 		}
 
-		// Set key and show response
 		$this->response['data']['is_done'] = false;
 		$this->response['data']['key']     = $key;
 
@@ -106,43 +113,35 @@ class EXPDBS_Core_AJAX {
 	 */
 	public function export() {
 
-		// Load export library
 		$this->load_export();
 
-		// Check key argument
 		if ( empty( $_POST['key'] ) || 32 != strlen( $_POST['key'] ) ) {
 			$this->error_ajax_response( 'Error in key argument.' );
 		}
 
-		// Check export process
 		$migration = EXPDBS_Core_Export::export( $_POST['key'] );
 		if ( false === $migration ) {
 			$this->error_ajax_response( 'Error when exporting data.' );
 		}
 
-		// Default response
 		$this->response['data']['is_done'] = false;
 
-		// Check generation end
 		if ( $migration['total']['done'] ) {
 
 			if ( $migration['zip'] || $migration['gzip'] ) {
 				$this->response['data']['compressing'] = true;
 
 			} else {
-				// File generated
 				$this->response['data']['is_done'] = true;
 			}
 
 		} else {
 
-			// Progress
 			$this->response['data']['percent'] = empty( $migration['total']['rows'] )
 				? 0
 				: round( ( $migration['total']['index'] / $migration['total']['rows'] ) * 100 );
 		}
 
-		// Output
 		$this->output_ajax_response();
 	}
 
@@ -153,15 +152,12 @@ class EXPDBS_Core_AJAX {
 	 */
 	public function compress() {
 
-		// Load export library
 		$this->load_export();
 
-		// Check key argument
 		if ( empty( $_POST['key'] ) || 32 != strlen( $_POST['key'] ) ) {
 			$this->error_ajax_response( 'Error in key argument.' );
 		}
 
-		// Check compression process
 		$migration = EXPDBS_Core_Export::compress( $_POST['key'] );
 		if ( false === $migration ) {
 			$this->error_ajax_response( 'Error when compressing data.' );
@@ -179,16 +175,12 @@ class EXPDBS_Core_AJAX {
 	 */
 	public function download() {
 
-		// Load export library
 		$this->load_export();
 
-		// Check key value
 		if ( empty( $_POST['key'] ) || 32 != strlen( $_POST['key'] ) ) {
 			wp_die( 'Not valid key' );
 		}
 
-		// Download file
-		// core/export.php now handles is_readable() + safe_read() + safe_unlink()
 		EXPDBS_Core_Export::download( $_POST['key'] );
 	}
 
@@ -204,10 +196,8 @@ class EXPDBS_Core_AJAX {
 	 */
 	private function load_export() {
 
-		// Check submit data
 		$this->check_ajax_submit();
 
-		// Load export class
 		require_once EXPDBS_PATH . '/core/export.php';
 	}
 
@@ -218,17 +208,16 @@ class EXPDBS_Core_AJAX {
 	 */
 	private function check_ajax_submit() {
 
-		// Default response
 		$this->response = $this->default_ajax_response();
 
-		// Check user capabilities
+		// Capability
 		if ( ! current_user_can( 'manage_options' ) ) {
 			$this->response['status'] = 'error';
 			$this->response['reason'] = 'Operation not allowed for the current user.';
 			$this->output_ajax_response();
 		}
 
-		// Nonce check
+		// Nonce
 		if (
 			! isset( $_POST['nonce'] ) ||
 			! wp_verify_nonce( $_POST['nonce'], EXPDBS_FILE )
