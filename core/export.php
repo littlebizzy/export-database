@@ -770,7 +770,7 @@ class EXPDBS_Core_Export {
 
 
 
-	private static function get_migrations_folder() {
+	public static function get_migrations_folder() {
 
 		$upload_dir = wp_upload_dir();
 		return rtrim( $upload_dir['basedir'], '/' ) . '/expdbs-migrations';
