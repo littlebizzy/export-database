@@ -4,6 +4,17 @@ Backup your WordPress website
 
 ## Changelog
 
+### 2.0.0
+- migrated plugin to a classic procedural architecture with minimal files
+- removed all class-based structures and legacy constants for a cleaner codebase
+- added dedicated `inc/` folder with separate export and ajax handlers
+- introduced new export naming format using database name, timestamp, and random string
+- replaced automatic file deletion with a persistent export history table in the admin screen
+- added download and delete buttons for each generated file
+- improved overall security using per-request nonce validation for all ajax actions
+- redesigned admin page layout to show exports, file sizes, timestamps, and actions
+- strengthened zip and gzip handling with automatic fallbacks
+
 ### 1.3.1
 - added strict filesystem safety checks around all read/write/delete operations to prevent silent failures
 - hardened folder validation using new `ensure_folder()` to guarantee migrations directory is readable and writable
