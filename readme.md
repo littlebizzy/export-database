@@ -1,6 +1,6 @@
 # Export Database
 
-Quickly and easily export your WordPress database with a single click for the purposes of migration, testing, or backup (in either SQL or ZIP format).
+Backup your WordPress website
 
 ## Changelog
 
