@@ -41,15 +41,16 @@ class EXPDBS_Core_Export {
 
 		self::no_time_limit();
 
+		// ensure migrations folder is valid
+		$folder = self::get_migrations_folder();
+		EXPDBS_Core::ensure_folder( $folder );
+
 		$key = md5( EXPDBS_FILE . microtime() . rand( 0, 999999 ) );
 
 		$path = self::get_migration_path( $key );
-		$result = @file_put_contents( $path, self::get_head() );
 
-		if ( false === $result ) {
-			error_log( '[Export Database] Unable to write initial SQL file: ' . $path );
-			return false;
-		}
+		// use safe_write
+		EXPDBS_Core::safe_write( $path, self::get_head() );
 
 		self::add_migration( $key );
 
@@ -111,6 +112,10 @@ class EXPDBS_Core_Export {
 			return false;
 		}
 
+		// ensure folder exists
+		$folder = self::get_migrations_folder();
+		EXPDBS_Core::ensure_folder( $folder );
+
 		$chunk = '';
 
 		foreach ( $migration['info'] as $table => $info ) {
@@ -168,12 +173,12 @@ class EXPDBS_Core_Export {
 				continue;
 			}
 
-			$result = @file_put_contents( self::get_migration_path( $key ), $chunk, FILE_APPEND );
-
-			if ( false === $result ) {
-				error_log( '[Export Database] Failed writing SQL chunk: ' . self::get_migration_path( $key ) );
-				return false;
-			}
+			// append using safe_write
+			EXPDBS_Core::safe_write(
+				self::get_migration_path( $key ),
+				$chunk,
+				true // FILE_APPEND mode
+			);
 
 			break;
 		}
@@ -203,8 +208,16 @@ class EXPDBS_Core_Export {
 			wp_die( 'Could not find the migration file by key: ' . esc_html( $key ) );
 		}
 
+		$folder = self::get_migrations_folder();
+		EXPDBS_Core::ensure_folder( $folder );
+
 		$result   = true;
 		$path_sql = self::get_migration_path( $key );
+
+		// ensure SQL file is readable
+		if ( ! is_readable( $path_sql ) ) {
+			wp_die( 'Migration file is not readable: ' . esc_html( $path_sql ) );
+		}
 
 		// ZIP
 		if ( $migration['zip'] ) {
@@ -256,7 +269,7 @@ class EXPDBS_Core_Export {
 
 					@gzclose( $fp_out );
 					$result = false;
-					$migration['gzip'] = false;
+					@migration['gzip'] = false;
 
 				} else {
 
@@ -275,7 +288,7 @@ class EXPDBS_Core_Export {
 		}
 
 		if ( $result ) {
-			@unlink( $path_sql );
+			EXPDBS_Core::safe_unlink( $path_sql );
 		}
 
 		return $result;
@@ -311,17 +324,24 @@ class EXPDBS_Core_Export {
 
 		$path = self::get_migration_path( $key );
 
-		if ( ! @file_exists( $path ) ) {
+		if ( ! file_exists( $path ) ) {
 			wp_die( 'Could not find the migration file:<br />' . esc_html( $path ) );
+		}
+
+		if ( ! is_readable( $path ) ) {
+			wp_die( 'Migration file is not readable: ' . esc_html( $path ) );
 		}
 
 		@header( 'Content-Description: File Transfer' );
 		@header( 'Content-Type: application/octet-stream' );
 		@header( 'Content-Length: ' . @filesize( $path ) );
 		@header( 'Content-Disposition: attachment; filename=' . sanitize_file_name( DB_NAME ) . '.sql' . $ext );
-		@readfile( $path );
 
-		@unlink( $path );
+		// use safe_read
+		$data = EXPDBS_Core::safe_read( $path );
+		echo $data;
+
+		EXPDBS_Core::safe_unlink( $path );
 
 		die;
 	}
@@ -334,7 +354,7 @@ class EXPDBS_Core_Export {
 	public static function check_migrations_folder( &$folder ) {
 
 		$folder = self::get_migrations_folder();
-		return wp_mkdir_p( $folder );
+		return EXPDBS_Core::ensure_folder( $folder );
 	}
 
 
@@ -358,7 +378,8 @@ class EXPDBS_Core_Export {
 				continue;
 			}
 
-			$timestamp = (int) $timestamp;
+			// new sanitized timestamp
+			$timestamp = EXPDBS_Core::sanitize_timestamp( $timestamp );
 
 			if ( empty( $timestamp ) || time() - $timestamp > self::CLEANUP_MIGRATION_TIME ) {
 				$remove[] = $key;
@@ -378,9 +399,7 @@ class EXPDBS_Core_Export {
 				delete_option( 'expdbs_migrations_' . $key );
 
 				$path = self::get_migration_path( $key );
-				if ( is_file( $path ) && is_writable( $path ) ) {
-					@unlink( $path );
-				}
+				EXPDBS_Core::safe_unlink( $path );
 
 				continue;
 			}
