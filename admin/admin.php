@@ -51,6 +51,9 @@ class EXPDBS_Admin {
 		// Add styles and scripts
 		$this->enqueue_scripts();
 
+		// Pre-flight folder validation
+		$this->check_folder();
+
 		// Cleanup function at the end
 		add_action( 'shutdown', array( $this, 'cleanup' ) );
 	}
@@ -78,6 +81,22 @@ class EXPDBS_Admin {
 			EXPDBS_VERSION,
 			true
 		);
+	}
+
+
+
+	/**
+	 * check migrations folder for readability and writability
+	 */
+	private function check_folder() {
+
+		require_once EXPDBS_PATH . '/core/core.php';
+		require_once EXPDBS_PATH . '/core/export.php';
+
+		$folder = EXPDBS_Core_Export::get_migrations_folder();
+
+		// ensures folder exists and is readable/writable
+		EXPDBS_Core::ensure_folder( $folder );
 	}
 
 
