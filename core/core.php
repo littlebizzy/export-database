@@ -109,4 +109,112 @@ class EXPDBS_Core {
 
 
 
+	// safety helpers
+	// ---------------------------------------------------------------------------------------------------
+
+
+
+	/**
+	 * ensure a folder exists and is readable/writable
+	 */
+	public static function ensure_folder( $folder ) {
+
+		if ( is_dir( $folder ) ) {
+
+			if ( ! is_readable( $folder ) || ! is_writable( $folder ) ) {
+				wp_die( 'Export Database error: folder exists but is not fully readable/writable: ' . esc_html( $folder ) );
+			}
+
+			return true;
+		}
+
+		if ( ! wp_mkdir_p( $folder ) ) {
+			wp_die( 'Export Database error: unable to create folder: ' . esc_html( $folder ) );
+		}
+
+		if ( ! is_readable( $folder ) || ! is_writable( $folder ) ) {
+			wp_die( 'Export Database error: folder created but permissions are insufficient: ' . esc_html( $folder ) );
+		}
+
+		return true;
+	}
+
+
+
+	/**
+	 * safe file delete
+	 */
+	public static function safe_unlink( $path ) {
+
+		if ( empty( $path ) ) {
+			return false;
+		}
+
+		if ( is_file( $path ) && is_writable( $path ) ) {
+			return @unlink( $path );
+		}
+
+		return false;
+	}
+
+
+
+	/**
+	 * safe file write
+	 */
+	public static function safe_write( $path, $content ) {
+
+		$dir = dirname( $path );
+
+		if ( ! is_writable( $dir ) ) {
+			wp_die( 'Export Database error: cannot write file, directory is not writable: ' . esc_html( $path ) );
+		}
+
+		$result = @file_put_contents( $path, $content );
+
+		if ( false === $result ) {
+			wp_die( 'Export Database error: file_put_contents() failed writing: ' . esc_html( $path ) );
+		}
+
+		return true;
+	}
+
+
+
+	/**
+	 * safe file read
+	 */
+	public static function safe_read( $path ) {
+
+		if ( ! is_readable( $path ) ) {
+			wp_die( 'Export Database error: file is not readable: ' . esc_html( $path ) );
+		}
+
+		$data = @file_get_contents( $path );
+
+		if ( false === $data ) {
+			wp_die( 'Export Database error: file_get_contents() failed: ' . esc_html( $path ) );
+		}
+
+		return $data;
+	}
+
+
+
+	/**
+	 * sanitize timestamps
+	 */
+	public static function sanitize_timestamp( $value ) {
+
+		$value = (int) $value;
+
+		if ( $value <= 0 ) {
+			return false;
+		}
+
+		return $value;
+	}
+
+
+
 }
