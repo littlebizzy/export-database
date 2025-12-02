@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Export Database - Export class
+ * Export Database – Export class
  *
  * @package Export Database
  * @subpackage Export Database Core
@@ -45,12 +45,13 @@ class EXPDBS_Core_Export {
 		$folder = self::get_migrations_folder();
 		EXPDBS_Core::ensure_folder( $folder );
 
-		$key = md5( EXPDBS_FILE . microtime() . rand( 0, 999999 ) );
-
+		$key  = md5( EXPDBS_FILE . microtime() . rand( 0, 999999 ) );
 		$path = self::get_migration_path( $key );
 
-		// use safe_write
-		EXPDBS_Core::safe_write( $path, self::get_head() );
+		// write head
+		if ( ! EXPDBS_Core::safe_write( $path, self::get_head() ) ) {
+			wp_die( 'Cannot write initial SQL file: ' . esc_html( $path ) );
+		}
 
 		self::add_migration( $key );
 
@@ -116,6 +117,7 @@ class EXPDBS_Core_Export {
 		$folder = self::get_migrations_folder();
 		EXPDBS_Core::ensure_folder( $folder );
 
+		$path  = self::get_migration_path( $key );
 		$chunk = '';
 
 		foreach ( $migration['info'] as $table => $info ) {
@@ -173,12 +175,10 @@ class EXPDBS_Core_Export {
 				continue;
 			}
 
-			// append using safe_write
-			EXPDBS_Core::safe_write(
-				self::get_migration_path( $key ),
-				$chunk,
-				true // FILE_APPEND mode
-			);
+			// append safely (fixing the "temporary expression" fatal error)
+			if ( ! EXPDBS_Core::safe_write( $path, $chunk, true ) ) {
+				wp_die( 'Failed writing SQL chunk: ' . esc_html( $path ) );
+			}
 
 			break;
 		}
@@ -214,7 +214,6 @@ class EXPDBS_Core_Export {
 		$result   = true;
 		$path_sql = self::get_migration_path( $key );
 
-		// ensure SQL file is readable
 		if ( ! is_readable( $path_sql ) ) {
 			wp_die( 'Migration file is not readable: ' . esc_html( $path_sql ) );
 		}
@@ -269,7 +268,7 @@ class EXPDBS_Core_Export {
 
 					@gzclose( $fp_out );
 					$result = false;
-					@migration['gzip'] = false;
+					$migration['gzip'] = false;
 
 				} else {
 
@@ -337,7 +336,6 @@ class EXPDBS_Core_Export {
 		@header( 'Content-Length: ' . @filesize( $path ) );
 		@header( 'Content-Disposition: attachment; filename=' . sanitize_file_name( DB_NAME ) . '.sql' . $ext );
 
-		// use safe_read
 		$data = EXPDBS_Core::safe_read( $path );
 		echo $data;
 
@@ -348,9 +346,11 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Attempts to create the migrations folder
-	 */
+	// Folder
+	// ---------------------------------------------------------------------------------------------------
+
+
+
 	public static function check_migrations_folder( &$folder ) {
 
 		$folder = self::get_migrations_folder();
@@ -378,7 +378,6 @@ class EXPDBS_Core_Export {
 				continue;
 			}
 
-			// new sanitized timestamp
 			$timestamp = EXPDBS_Core::sanitize_timestamp( $timestamp );
 
 			if ( empty( $timestamp ) || time() - $timestamp > self::CLEANUP_MIGRATION_TIME ) {
@@ -618,8 +617,8 @@ class EXPDBS_Core_Export {
 			return '';
 		}
 
-		$dump  = '';
-		$count = count( $rows );
+		$dump   = '';
+		$count  = count( $rows );
 		$struct = $migration['struct'][ $table ];
 
 		foreach ( $rows as $row ) {
@@ -716,9 +715,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Add migration to the migrations index
-	 */
 	private static function add_migration( $key ) {
 
 		$migrations = @json_decode( get_option( 'expdbs_migrations' ), true );
@@ -734,9 +730,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Touch migration timer
-	 */
 	private static function touch_migration( $key ) {
 
 		$migrations = @json_decode( get_option( 'expdbs_migrations' ), true );
@@ -754,9 +747,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Retrieve migration data
-	 */
 	private static function get_migration( $key ) {
 
 		$migration = @json_decode( get_option( 'expdbs_migrations_' . $key ), true );
@@ -766,9 +756,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Save existing migration
-	 */
 	private static function set_migration( $key, $migration ) {
 
 		update_option( 'expdbs_migrations_' . $key, wp_json_encode( $migration ), false );
@@ -776,9 +763,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Retrieve migration path
-	 */
 	private static function get_migration_path( $key ) {
 
 		return self::get_migrations_folder() . '/' . $key;
@@ -786,9 +770,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Retrieve migrations folder
-	 */
 	private static function get_migrations_folder() {
 
 		$upload_dir = wp_upload_dir();
@@ -802,9 +783,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Add quotes to tables and fields
-	 */
 	private static function bq( $value ) {
 
 		if ( empty( $value ) || '*' === $value ) {
@@ -826,9 +804,6 @@ class EXPDBS_Core_Export {
 
 
 
-	/**
-	 * Set no time limit
-	 */
 	private static function no_time_limit() {
 
 		if ( ! function_exists( 'ini_get' ) || ! @ini_get( 'safe_mode' ) ) {
