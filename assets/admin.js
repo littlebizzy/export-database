@@ -21,6 +21,13 @@ jQuery(document).ready(function ($) {
 
 		$.post(get_ajax_url(), data, function (e) {
 
+			// handle fatal wp_die() HTML output
+			if (typeof e !== 'object') {
+				let msg = $('<div>').html(e).text(); // strip HTML tags
+				alert(msg || 'Server error');
+				return;
+			}
+
 			if (typeof e.status === 'undefined') {
 
 				alert('Unknown error');
@@ -72,8 +79,11 @@ jQuery(document).ready(function ($) {
 				}
 			}
 
-		}).fail(function () {
-			alert('Server communication error.\nPlease try again.');
+		}).fail(function (xhr) {
+
+			// improved fail handler for fatal errors
+			let msg = xhr.responseText ? $('<div>').html(xhr.responseText).text() : '';
+			alert(msg || 'Server communication error.\nPlease try again.');
 		});
 	}
 
