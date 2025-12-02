@@ -4,6 +4,16 @@ Quickly and easily export your WordPress database with a single click for the pu
 
 ## Changelog
 
+### 1.3.1
+- added strict filesystem safety checks around all read/write/delete operations to prevent silent failures
+- hardened folder validation using new `ensure_folder()` to guarantee migrations directory is readable and writable
+- improved handling of corrupted or legacy migration timestamps via centralized sanitize logic
+- replaced low-level file operations with safe wrappers (`safe_write`, `safe_read`, `safe_unlink`) for consistent error behavior
+- added explicit readability guard to download handler to prevent 0-byte or inaccessible file downloads
+- improved admin pre-flight validation to detect permission issues before export begins
+- updated AJAX workflow to gracefully surface `wp_die()` errors triggered by permission or filesystem problems
+- cleaned up internal logic to minimize edge-case failures on restrictive hosting environments
+
 ### 1.3.0
 - fixed long-standing issue with BIT field export handling to prevent malformed SQL in certain table structures
 - cleaned up legacy AJAX routing logic and simplified initialization for improved stability
