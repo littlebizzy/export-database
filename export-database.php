@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // plugin constants
 define( 'EXPDBS_FILE', __FILE__ );
 define( 'EXPDBS_PATH', __DIR__ );
-define( 'EXPDBS_VERSION', '1.2.1' );
+define( 'EXPDBS_VERSION', '1.3.0' );
 
 // only admin area
 if ( ! is_admin() ) {
