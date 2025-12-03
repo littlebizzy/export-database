@@ -97,7 +97,7 @@ function expdbs_admin_page() {
         <p>
             <label>
                 <input id="expdbs-compress" type="checkbox" checked="checked" />
-                enable compression if available
+                Enable compression (uses ZIP when supported, otherwise GZIP if available)
             </label>
         </p>
 
