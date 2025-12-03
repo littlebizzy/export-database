@@ -4,6 +4,9 @@ Backup your WordPress website
 
 ## Changelog
 
+### 2.0.1
+- added support for Git Updater
+
 ### 2.0.0
 - migrated plugin to a classic procedural architecture with minimal files
 - removed all class-based structures and legacy constants for a cleaner codebase
