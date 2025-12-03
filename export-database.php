@@ -103,7 +103,7 @@ function expdbs_admin_page() {
 
         <p>
             <button id="expdbs-export" class="button button-primary button-large">
-                export database
+                Export Database
             </button>
         </p>
 
