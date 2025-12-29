@@ -4,6 +4,9 @@ Backup your WordPress website
 
 ## Changelog
 
+### 2.0.2
+- added Settings link on the plugins screen pointing to Tools > Export Database
+
 ### 2.0.1
 - added support for Git Updater
 
