@@ -3,7 +3,7 @@
 Plugin Name: Export Database
 Plugin URI: https://www.littlebizzy.com/plugins/export-database
 Description: Backup your WordPress website
-Version: 2.0.1
+Version: 2.0.2
 Author: LittleBizzy
 Author URI: https://www.littlebizzy.com
 Requires PHP: 7.0
@@ -26,6 +26,17 @@ add_filter( 'gu_override_dot_org', function( $overrides ) {
     $overrides[] = 'export-database/export-database.php';
     return $overrides;
 }, 999 );
+
+// add settings link on plugins page
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'expdbs_settings_link' );
+function expdbs_settings_link( $links ) {
+
+    $settings_link = '<a href="' . admin_url( 'tools.php?page=export-database' ) . '">Settings</a>';
+
+    array_unshift( $links, $settings_link );
+
+    return $links;
+}
 
 // return plugin path
 function expdbs_path() {
