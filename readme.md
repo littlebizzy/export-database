@@ -11,6 +11,7 @@ Backup your WordPress website
 - switched from memory-based file loading to streamed downloads
 - improved compatibility with BBQ Firewall and hardened WordPress stacks
 - improved reliability for large database exports
+- `Tested up to:` bumped to 6.9
 
 ### 2.0.2
 - added Settings link on the plugins screen pointing to Tools > Export Database
