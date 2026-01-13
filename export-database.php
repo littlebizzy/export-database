@@ -3,11 +3,11 @@
 Plugin Name: Export Database
 Plugin URI: https://www.littlebizzy.com/plugins/export-database
 Description: Backup your WordPress website
-Version: 2.0.2
+Version: 2.1.0
 Author: LittleBizzy
 Author URI: https://www.littlebizzy.com
 Requires PHP: 7.0
-Tested up to: 6.7
+Tested up to: 6.9
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Update URI: false
@@ -90,6 +90,23 @@ function expdbs_safe_unlink( $path ) {
     if ( file_exists( $path ) && is_writable( $path ) ) @unlink( $path );
 }
 
+// create short-lived download token so the filename never appears in the url
+function expdbs_create_download_token( $file ) {
+
+    $token = bin2hex( random_bytes( 16 ) );
+
+    set_transient(
+        'expdbs_dl_' . $token,
+        array(
+            'file' => (string) $file,
+            'user' => (int) get_current_user_id(),
+        ),
+        10 * MINUTE_IN_SECONDS
+    );
+
+    return $token;
+}
+
 // include logic files
 require_once expdbs_path() . 'inc/export.php';
 require_once expdbs_path() . 'inc/ajax.php';
@@ -148,7 +165,8 @@ function expdbs_admin_page() {
                 <tr><td colspan="4">no export files found.</td></tr>
             <?php else: ?>
                 <?php foreach ( $files as $file ):
-                    $name = basename( $file );
+                    $name  = basename( $file );
+                    $token = expdbs_create_download_token( $name );
                     ?>
                     <tr>
                         <td><?php echo esc_html( $name ); ?></td>
@@ -157,7 +175,7 @@ function expdbs_admin_page() {
                         <td>
                             <a href="<?php echo esc_url(
                                 admin_url(
-                                    'admin-ajax.php?action=expdbs_download&file=' . urlencode( $name ) . '&nonce=' . wp_create_nonce( 'expdbs_nonce' )
+                                    'admin-ajax.php?action=expdbs_download&token=' . urlencode( $token ) . '&nonce=' . wp_create_nonce( 'expdbs_nonce' )
                                 )
                             ); ?>" class="button">download</a>
 
