@@ -4,6 +4,14 @@ Backup your WordPress website
 
 ## Changelog
 
+### 2.1.0
+- replaced direct filename-based download URLs with short-lived token downloads
+- removed `.sql` and `file=` parameters from AJAX requests to avoid firewall false positives
+- added transient-based authorization for download requests
+- switched from memory-based file loading to streamed downloads
+- improved compatibility with BBQ Firewall and hardened WordPress stacks
+- improved reliability for large database exports
+
 ### 2.0.2
 - added Settings link on the plugins screen pointing to Tools > Export Database
 
