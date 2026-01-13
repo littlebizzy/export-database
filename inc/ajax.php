@@ -29,18 +29,47 @@ function expdbs_ajax_delete() {
 }
 add_action( 'wp_ajax_expdbs_delete', 'expdbs_ajax_delete' );
 
-// download file
+// download file via token
 function expdbs_ajax_download() {
+
     expdbs_check_ajax();
-    if ( empty( $_GET['file'] ) ) wp_die( 'Missing file' );
+
+    if ( empty( $_GET['token'] ) ) wp_die( 'Missing token' );
+
+    $token = preg_replace( '/[^a-f0-9]/', '', strtolower( (string) $_GET['token'] ) );
+
+    if ( empty( $token ) ) wp_die( 'Invalid token' );
+
+    $payload = get_transient( 'expdbs_dl_' . $token );
+
+    if ( empty( $payload ) || empty( $payload['file'] ) || empty( $payload['user'] ) ) {
+        wp_die( 'Download expired' );
+    }
+
+    if ( (int) $payload['user'] !== (int) get_current_user_id() ) {
+        wp_die( 'Not allowed' );
+    }
+
     $folder = expdbs_folder();
-    $file   = basename( $_GET['file'] );
+    $file   = basename( (string) $payload['file'] );
     $path   = $folder . '/' . $file;
-    $data = expdbs_safe_read( $path );
+
+    if ( ! file_exists( $path ) || ! is_readable( $path ) ) {
+        delete_transient( 'expdbs_dl_' . $token );
+        wp_die( 'File not readable' );
+    }
+
+    delete_transient( 'expdbs_dl_' . $token );
+
+    if ( function_exists( 'nocache_headers' ) ) {
+        nocache_headers();
+    }
+
     header( 'Content-Type: application/octet-stream' );
     header( 'Content-Disposition: attachment; filename="' . $file . '"' );
-    header( 'Content-Length: ' . strlen( $data ) );
-    echo $data;
+    header( 'Content-Length: ' . filesize( $path ) );
+
+    @readfile( $path );
     exit;
 }
 add_action( 'wp_ajax_expdbs_download', 'expdbs_ajax_download' );
