@@ -3,7 +3,7 @@
 Plugin Name: Export Database
 Plugin URI: https://www.littlebizzy.com/plugins/export-database
 Description: Backup your WordPress website
-Version: 2.1.0
+Version: 2.1.1
 Author: LittleBizzy
 Author URI: https://www.littlebizzy.com
 Requires PHP: 7.0
@@ -93,7 +93,11 @@ function expdbs_safe_unlink( $path ) {
 // create short-lived download token so the filename never appears in the url
 function expdbs_create_download_token( $file ) {
 
-    $token = bin2hex( random_bytes( 16 ) );
+    try {
+        $token = bin2hex( random_bytes( 16 ) );
+    } catch ( Exception $e ) {
+        $token = wp_generate_password( 32, false, false );
+    }
 
     set_transient(
         'expdbs_dl_' . $token,
