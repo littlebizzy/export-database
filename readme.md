@@ -4,6 +4,11 @@ Backup your WordPress website
 
 ## Changelog
 
+### 2.1.1
+- added fallback token generator when `random_bytes()` is unavailable
+- prevents rare fatal errors on misconfigured PHP builds
+- improves reliability on hardened or restricted hosting environments
+
 ### 2.1.0
 - replaced direct filename-based download URLs with short-lived token downloads
 - removed `.sql` and `file=` parameters from AJAX requests to avoid firewall false positives
